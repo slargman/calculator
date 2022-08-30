@@ -1,4 +1,4 @@
-const MAX_INPUT_LENGTH = 9;
+export const MAX_INPUT_LENGTH = 9;
 
 export function countDigits(operand: string) {
   const digitRegex = new RegExp('\\d');

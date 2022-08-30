@@ -1,38 +1,83 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+}
+
+:root {
+  --light-grey: hsl(0 0% 65%);
+  --dark-grey: hsl(0 0% 20%);
+  --orange: hsl(38, 94%, 50%);
+  --orange-active: hsl(38, 94%, 90%);
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  height: 100vh;
+  width: 100vw;
+}
+
+.Calculator {
+  background-color: black;
+  padding: 10px;
+  padding-bottom: 30px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, 50px);
+  grid-template-rows: repeat(7, 50px);
+  grid-template-areas:
+    'buffer buffer buffer buffer'
+    'display display display display'
+    'ac plus-minus percent division'
+    'number-7 number-8 number-9 multiplication'
+    'number-4 number-5 number-6 subtraction'
+    'number-1 number-2 number-3 addition'
+    'number-0 number-0 decimal equals';
+}
+
+.Display {
   color: white;
+  display: flex;
+  align-items: flex-end;
+  justify-content: right;
 }
 
-.App-link {
-  color: #61dafb;
+.Button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  border-radius: 50px;
+  color: white;
+  background-color: var(--dark-grey);
+  font-size: 25px;
+  line-height: 25px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Button-0 {
+  justify-content: flex-start;
+  padding-left: 18px;
+}
+
+.Function {
+  color: black;
+  background-color: var(--light-grey);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.Operator {
+  background-color: var(--orange);
+}
+
+.OperatorActive {
+  color: var(--orange);
+  background-color: var(--orange-active);
 }
