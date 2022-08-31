@@ -16,6 +16,10 @@ export function checkNegative(operand: string) {
   return operand[0] === '-';
 }
 
+export function checkScientificNotation(operand: string) {
+  return operand.includes('e');
+}
+
 function filterCommas(operand: string) {
   return operand
     .split('')
@@ -50,6 +54,35 @@ function trimLeadingZeros(integer: string) {
   return trimmed === '' ? '0' : trimmed;
 }
 
+function getExponent(operand: string) {
+  if (!checkScientificNotation(operand)) return 0;
+  return Number(operand.split('e')[1]);
+}
+
+function adjustByExponent(integer: string, fraction: string, exponent: number) {
+  if (exponent === 0) return [integer, fraction];
+
+  for (let i = 0; i < Math.abs(exponent); i++) {
+    if (exponent > 0) {
+      const transfer = fraction[0] || '0';
+      integer = integer + transfer;
+      fraction = fraction.substring(1);
+    } else {
+      const transfer = integer[integer.length - 1] || '0';
+      fraction = transfer + fraction;
+      integer = integer.substring(0, integer.length - 1) || '0';
+    }
+  }
+
+  const nonZeroRegex = /[^0]/;
+
+  if (!nonZeroRegex.test(fraction)) {
+    fraction = '';
+  }
+
+  return [integer, fraction];
+}
+
 export function formatOperand(operand: string): [boolean, string] {
   operand = filterCommas(operand);
   const number = Number(operand);
@@ -66,10 +99,22 @@ export function formatOperand(operand: string): [boolean, string] {
   const prefix = operandIsNegative ? '-' : '';
 
   const operandParts = operand.split(/\D/);
-  const integerPart = operandIsNegative ? operandParts[1] : operandParts[0];
-  const fractionPart = operandIsNegative ? operandParts[2] : operandParts[1];
+  let integerPart = operandIsNegative ? operandParts[1] : operandParts[0];
+  integerPart = integerPart || '0';
+  integerPart = trimLeadingZeros(integerPart);
 
-  const operandHasDecimal = checkDecimal(operand);
+  let fractionPart = operandIsNegative ? operandParts[2] : operandParts[1];
+  fractionPart = fractionPart || '';
+
+  const exponent = getExponent(operand);
+  [integerPart, fractionPart] = adjustByExponent(
+    integerPart,
+    fractionPart,
+    exponent
+  );
+
+  const operandHasDecimal =
+    checkDecimal(operand) || fractionPart !== '';
   // don't add decimal to max length integers
   const decimal =
     operandHasDecimal && integerPart.length < MAX_INPUT_LENGTH ? '.' : '';
@@ -79,8 +124,7 @@ export function formatOperand(operand: string): [boolean, string] {
       ? ''
       : fractionPart.slice(0, MAX_INPUT_LENGTH - integerPart.length);
 
-  let integer = trimLeadingZeros(integerPart);
-  integer = addCommas(integer);
+  const integer = addCommas(integerPart);
 
   return [false, prefix + integer + decimal + fraction];
 }

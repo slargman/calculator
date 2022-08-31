@@ -1,6 +1,7 @@
 import {
   checkDecimal,
   checkNegative,
+  checkScientificNotation,
   countDigits,
   evaluate,
   formatOperand,
@@ -33,6 +34,14 @@ describe('utilities', () => {
     });
   });
 
+  describe('checkScientificNotation', () => {
+    it('should check scientific notation correctly', () => {
+      expect(checkScientificNotation('1,000')).toBe(false);
+      expect(checkScientificNotation('-1,000')).toBe(false);
+      expect(checkScientificNotation('-1.0e8')).toBe(true);
+    });
+  });
+
   describe('formatOperand', () => {
     it('should format operands correctly', () => {
       expect(formatOperand('008')).toStrictEqual([false, '8']);
@@ -47,6 +56,8 @@ describe('utilities', () => {
       ]);
       expect(formatOperand('123.4567890')).toStrictEqual([false, '123.456789']);
       expect(formatOperand('-0.0000000017')).toStrictEqual([true, '0']);
+      expect(formatOperand('1e-7')).toStrictEqual([false, '0.0000001']);
+      expect(formatOperand('-1e-7')).toStrictEqual([false, '-0.0000001']);
     });
   });
 
@@ -54,9 +65,9 @@ describe('utilities', () => {
     it('should evaluate expressions correctly', () => {
       expect(evaluate('-0.0000017', '/', '100')).toStrictEqual([
         false,
-        '-0.00000002',
+        '-0.00000001',
       ]);
-      expect(evaluate('-0.0000017', '/', '100')).toStrictEqual([true, '0']);
+      expect(evaluate('-0.0000017', '/', '1000')).toStrictEqual([true, '0']);
     });
   });
 });
