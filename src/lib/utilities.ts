@@ -50,7 +50,7 @@ function trimLeadingZeros(integer: string) {
   return trimmed === '' ? '0' : trimmed;
 }
 
-export function formatOperand(operand: string) {
+export function formatOperand(operand: string): [boolean, string] {
   operand = filterCommas(operand);
   const number = Number(operand);
 
@@ -58,7 +58,7 @@ export function formatOperand(operand: string) {
     Math.abs(number) >= 10 ** MAX_INPUT_LENGTH ||
     (Math.abs(number) <= 10 ** -(MAX_INPUT_LENGTH - 1) && number !== 0)
   ) {
-    return 'Error';
+    return [true, '0'];
   }
 
   const operandIsNegative = checkNegative(operand);
@@ -82,7 +82,7 @@ export function formatOperand(operand: string) {
   let integer = trimLeadingZeros(integerPart);
   integer = addCommas(integer);
 
-  return prefix + integer + decimal + fraction;
+  return [false, prefix + integer + decimal + fraction];
 }
 
 export function calculateDisplaySize(operand: string) {
@@ -91,7 +91,11 @@ export function calculateDisplaySize(operand: string) {
   return 50 - 4 * (digits - 6);
 }
 
-export function evaluate(operand1: string, operator: string, operand2: string) {
+export function evaluate(
+  operand1: string,
+  operator: string,
+  operand2: string
+): [boolean, string] {
   const number1 = Number(filterCommas(operand1));
   const number2 = Number(filterCommas(operand2));
   let result;
@@ -112,7 +116,7 @@ export function evaluate(operand1: string, operator: string, operand2: string) {
     result === Infinity ||
     result === -Infinity
   ) {
-    return 'Error';
+    return [true, '0'];
   }
 
   return formatOperand(result.toString());

@@ -2,6 +2,7 @@ import {
   checkDecimal,
   checkNegative,
   countDigits,
+  evaluate,
   formatOperand,
 } from './lib/utilities';
 
@@ -34,14 +35,28 @@ describe('utilities', () => {
 
   describe('formatOperand', () => {
     it('should format operands correctly', () => {
-      expect(formatOperand('008')).toBe('8');
-      expect(formatOperand('008.0')).toBe('8.0');
-      expect(formatOperand('-8.')).toBe('-8.');
-      expect(formatOperand('-8.0')).toBe('-8.0');
-      expect(formatOperand('123456789')).toBe('123,456,789');
-      expect(formatOperand('123456789.')).toBe('123,456,789');
-      expect(formatOperand('123456789.0')).toBe('123,456,789');
-      expect(formatOperand('123.4567890')).toBe('123.456789');
+      expect(formatOperand('008')).toStrictEqual([false, '8']);
+      expect(formatOperand('008.0')).toStrictEqual([false, '8.0']);
+      expect(formatOperand('-8.')).toStrictEqual([false, '-8.']);
+      expect(formatOperand('-8.0')).toStrictEqual([false, '-8.0']);
+      expect(formatOperand('123456789')).toStrictEqual([false, '123,456,789']);
+      expect(formatOperand('123456789.')).toStrictEqual([false, '123,456,789']);
+      expect(formatOperand('123456789.0')).toStrictEqual([
+        false,
+        '123,456,789',
+      ]);
+      expect(formatOperand('123.4567890')).toStrictEqual([false, '123.456789']);
+      expect(formatOperand('-0.0000000017')).toStrictEqual([true, '0']);
+    });
+  });
+
+  describe('evaluate', () => {
+    it('should evaluate expressions correctly', () => {
+      expect(evaluate('-0.0000017', '/', '100')).toStrictEqual([
+        false,
+        '-0.00000002',
+      ]);
+      expect(evaluate('-0.0000017', '/', '100')).toStrictEqual([true, '0']);
     });
   });
 });
