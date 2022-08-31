@@ -28,7 +28,6 @@ type Action =
   | { type: 'cleared_all' }
   | { type: 'cleared_operand' }
   | { type: 'appended_digit'; digit: string }
-  | { type: 'input_new_number_with_operator'; digit: string }
   | { type: 'input_new_number'; digit: string }
   | { type: 'appended_decimal' }
   | { type: 'applied_plus_minus' }
@@ -49,15 +48,6 @@ function reducer(state: State, action: Action): State {
       const [error, operand] = formatOperand(state.operand + action.digit);
       return {
         ...state,
-        operand,
-        error,
-      };
-    }
-    case 'input_new_number_with_operator': {
-      const [error, operand] = formatOperand(action.digit);
-      return {
-        ...state,
-        mem: state.operand,
         operand,
         error,
       };
