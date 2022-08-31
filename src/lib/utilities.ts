@@ -113,8 +113,7 @@ export function formatOperand(operand: string): [boolean, string] {
     exponent
   );
 
-  const operandHasDecimal =
-    checkDecimal(operand) || fractionPart !== '';
+  const operandHasDecimal = checkDecimal(operand) || fractionPart !== '';
   // don't add decimal to max length integers
   const decimal =
     operandHasDecimal && integerPart.length < MAX_INPUT_LENGTH ? '.' : '';
@@ -132,7 +131,7 @@ export function formatOperand(operand: string): [boolean, string] {
 export function calculateDisplaySize(operand: string) {
   const digits = countDigits(operand);
   if (digits <= 6) return 50;
-  return 50 - 4 * (digits - 6);
+  return 50 - 5 * (digits - 6);
 }
 
 export function evaluate(
