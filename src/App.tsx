@@ -188,12 +188,13 @@ export default function App() {
     dispatch({ type: 'appended_decimal' });
   };
   const handleDigitClick = (digit: string) => {
-    if (countDigits(operand) === MAX_INPUT_LENGTH) return;
     if (operator !== null && mem === null) {
       dispatch({ type: 'input_new_number', digit });
-    } else {
-      dispatch({ type: 'appended_digit', digit });
+      return;
     }
+    if (countDigits(operand) === MAX_INPUT_LENGTH) return;
+
+    dispatch({ type: 'appended_digit', digit });
   };
 
   const operators = [
